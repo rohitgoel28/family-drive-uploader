@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Family Archive Uploader</title>
+  <style>
+    :root {
+      --bg:#f7f6f2; --surface:#ffffff; --text:#1f1f1f; --muted:#6b7280; --primary:#0f766e; --border:#d6d3d1;
+    }
+    body { font-family: Arial, sans-serif; background:var(--bg); color:var(--text); margin:0; }
+    .wrap { max-width: 760px; margin: 40px auto; padding: 24px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:0 8px 24px rgba(0,0,0,.05); }
+    h1 { margin:0 0 8px; font-size:32px; }
+    p { color:var(--muted); line-height:1.5; }
+    label { display:block; margin:14px 0 6px; font-weight:700; }
+    input, select, textarea { width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:16px; box-sizing:border-box; }
+    button { margin-top:18px; background:var(--primary); color:white; border:0; border-radius:10px; padding:12px 16px; font-size:16px; cursor:pointer; }
+    .note { margin-top:16px; font-size:14px; color:var(--muted); }
+    code { background:#f3f4f6; padding:2px 6px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Family Archive Uploader</h1>
+      <p>This is a starter static app for uploading family memories into Google Drive folders. Before deployment, fill in the <code>CONFIG</code> block inside this file with your Google Cloud and Drive folder details.</p>
+
+      <label>Child</label>
+      <select>
+        <option>Ayaan</option>
+        <option>Som</option>
+        <option>Both</option>
+      </select>
+
+      <label>Category</label>
+      <select>
+        <option>Art</option>
+        <option>Lego</option>
+        <option>Electronics</option>
+        <option>Piano</option>
+        <option>Medals</option>
+        <option>School</option>
+        <option>Other</option>
+      </select>
+
+      <label>Title</label>
+      <input placeholder="2026 Spring piano recital" />
+
+      <label>Date</label>
+      <input type="date" />
+
+      <label>Notes</label>
+      <textarea rows="4" placeholder="Any context, milestone, award, or story"></textarea>
+
+      <label>File</label>
+      <input type="file" />
+
+      <button type="button">Upload</button>
+      <div class="note">Starter UI only. Wire the upload function after adding Google OAuth client, API key, and Drive folder IDs in the configuration section.</div>
+    </div>
+  </div>
+
+<script>
+const CONFIG = {
+  GOOGLE_API_KEY: 'AIzaSyDpFrvApaq4xruxj-jmKWHC0gMuhn-yT5w',
+  GOOGLE_CLIENT_ID: '707524154552-n7rsg0dvs9u60g20ooclns6ebtj3nkvf.apps.googleusercontent.com',
+  DRIVE_FOLDER_AYAAN: '1exh3fxgi0jmQvdGPJE2SgIOnYTIsEoM_',
+  DRIVE_FOLDER_SOM: '1y5o31cU-IqNR__HDw2Ly8dXngr08E1jJ',
+  DRIVE_FOLDER_BOTH: '1S_BU-C1BDGh3RRBWBeK7bIqzxObYudyM'
+};
+</script>
+</body>
+</html>
