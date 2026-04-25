@@ -4,60 +4,107 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Family Archive Uploader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script async defer src="https://apis.google.com/js/api.js"></script>
+  <script async defer src="https://accounts.google.com/gsi/client"></script>
   <style>
-    :root {
-      --bg:#f7f6f2; --surface:#ffffff; --text:#1f1f1f; --muted:#6b7280; --primary:#0f766e; --border:#d6d3d1;
-    }
-    body { font-family: Arial, sans-serif; background:var(--bg); color:var(--text); margin:0; }
-    .wrap { max-width: 760px; margin: 40px auto; padding: 24px; }
-    .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:0 8px 24px rgba(0,0,0,.05); }
-    h1 { margin:0 0 8px; font-size:32px; }
-    p { color:var(--muted); line-height:1.5; }
-    label { display:block; margin:14px 0 6px; font-weight:700; }
-    input, select, textarea { width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:16px; box-sizing:border-box; }
-    button { margin-top:18px; background:var(--primary); color:white; border:0; border-radius:10px; padding:12px 16px; font-size:16px; cursor:pointer; }
-    .note { margin-top:16px; font-size:14px; color:var(--muted); }
-    code { background:#f3f4f6; padding:2px 6px; border-radius:6px; }
+    :root{--bg:#f7f6f2;--surface:#ffffff;--surface2:#f3f0ec;--text:#28251d;--muted:#6f6a63;--border:#dad4cc;--primary:#01696f;--primary2:#0c4e54;--success:#2f6f32;--error:#a12c7b;--radius:16px;--shadow:0 10px 30px rgba(26,26,26,.08)}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:900px;margin:0 auto;padding:28px 18px 60px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+    .brand h1{margin:0;font-size:32px;line-height:1.05}.brand p{margin:8px 0 0;color:var(--muted);max-width:62ch;line-height:1.5}
+    .pill{display:inline-flex;padding:8px 12px;border:1px solid var(--border);border-radius:999px;background:var(--surface);font-size:13px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;margin-top:24px}.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .section{padding:22px}.section h2{margin:0 0 6px;font-size:20px}.sub{color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:16px}
+    label{display:block;font-size:14px;font-weight:600;margin:14px 0 7px} input,select,textarea{width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:12px;background:#fff;font:inherit;color:var(--text)}
+    textarea{min-height:104px;resize:vertical} .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    button{appearance:none;border:0;border-radius:12px;padding:13px 16px;font:inherit;font-weight:600;cursor:pointer}.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary2)}
+    .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)} .status{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:14px;display:none;line-height:1.45}
+    .status.show{display:block}.status.info{background:#e8f1f1;color:#164043}.status.success{background:#e3f0e2;color:var(--success)}.status.error{background:#f6e3ef;color:var(--error)}
+    .meta{display:grid;gap:12px}.meta-box{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--surface2)}.meta-box strong{display:block;font-size:13px;margin-bottom:4px}.tiny{font-size:12px;color:var(--muted);line-height:1.5}
+    code{background:#efece7;padding:2px 6px;border-radius:7px}.footer-note{margin-top:14px;font-size:13px;color:var(--muted);line-height:1.55}
+    @media (max-width:780px){.grid,.row{grid-template-columns:1fr}.brand h1{font-size:28px}}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
-      <h1>Family Archive Uploader</h1>
-      <p>This is a starter static app for uploading family memories into Google Drive folders. Before deployment, fill in the <code>CONFIG</code> block inside this file with your Google Cloud and Drive folder details.</p>
+    <div class="top">
+      <div class="brand">
+        <div class="pill">Family archive uploader</div>
+        <h1>Upload a memory in under a minute</h1>
+        <p>Choose the child, category, date, note, and file. The app signs you into Google and uploads the file directly into the correct Google Drive folder.</p>
+      </div>
+      <div id="authArea" class="pill">Not signed in</div>
+    </div>
 
-      <label>Child</label>
-      <select>
-        <option>Ayaan</option>
-        <option>Som</option>
-        <option>Both</option>
-      </select>
+    <div class="grid">
+      <div class="card section">
+        <h2>New upload</h2>
+        <div class="sub">This version is fully wired for Google sign-in and Google Drive upload. Add your real credentials in the CONFIG block before deployment.</div>
 
-      <label>Category</label>
-      <select>
-        <option>Art</option>
-        <option>Lego</option>
-        <option>Electronics</option>
-        <option>Piano</option>
-        <option>Medals</option>
-        <option>School</option>
-        <option>Other</option>
-      </select>
+        <div class="row">
+          <div>
+            <label for="child">Child</label>
+            <select id="child">
+              <option value="Ayaan">Ayaan</option>
+              <option value="Som">Som</option>
+              <option value="Both">Both</option>
+            </select>
+          </div>
+          <div>
+            <label for="category">Category</label>
+            <select id="category">
+              <option>Art</option>
+              <option>Lego</option>
+              <option>Electronics</option>
+              <option>Piano</option>
+              <option>Medals</option>
+              <option>School</option>
+              <option>Photos</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
 
-      <label>Title</label>
-      <input placeholder="2026 Spring piano recital" />
+        <div class="row">
+          <div>
+            <label for="title">Title</label>
+            <input id="title" placeholder="Spring recital" />
+          </div>
+          <div>
+            <label for="date">Date</label>
+            <input id="date" type="date" />
+          </div>
+        </div>
 
-      <label>Date</label>
-      <input type="date" />
- 
-      <label>Notes</label>
-      <textarea rows="4" placeholder="Any context, milestone, award, or story"></textarea>
+        <label for="notes">Notes</label>
+        <textarea id="notes" placeholder="What happened, why it matters, who was there, award or milestone"></textarea>
 
-      <label>File</label>
-      <input type="file" />
+        <label for="file">File</label>
+        <input id="file" type="file" />
 
-      <button type="button">Upload</button>
-      <div class="note">Starter UI only. Wire the upload function after adding Google OAuth client, API key, and Drive folder IDs in the configuration section.</div>
+        <div class="btns">
+          <button id="signinBtn" class="btn-secondary" type="button">Sign in with Google</button>
+          <button id="uploadBtn" class="btn-primary" type="button">Upload to Drive</button>
+        </div>
+
+        <div id="status" class="status info"></div>
+        <div class="footer-note">Recommended title format: <code>YYYY-MM-DD_Category_Short-Description</code>. The uploaded Drive filename is automatically standardized from your entries.</div>
+      </div>
+
+      <div class="card section">
+        <h2>Setup snapshot</h2>
+        <div class="sub">These values must be real before the app can work.</div>
+        <div class="meta">
+          <div class="meta-box"><strong>OAuth client ID</strong><span id="clientStatus">Not configured</span></div>
+          <div class="meta-box"><strong>API key</strong><span id="apiStatus">Not configured</span></div>
+          <div class="meta-box"><strong>Ayaan folder</strong><span id="ayaanStatus">Not configured</span></div>
+          <div class="meta-box"><strong>Som folder</strong><span id="somStatus">Not configured</span></div>
+          <div class="meta-box"><strong>Both folder</strong><span id="bothStatus">Not configured</span></div>
+        </div>
+        <p class="tiny" style="margin-top:14px">OAuth uses your GitHub Pages site origin in Google Cloud. The API key should be restricted to HTTP referrers for your site and to the Google Drive API only.</p>
+      </div>
     </div>
   </div>
 
@@ -67,8 +114,189 @@ const CONFIG = {
   GOOGLE_CLIENT_ID: '707524154552-n7rsg0dvs9u60g20ooclns6ebtj3nkvf.apps.googleusercontent.com',
   DRIVE_FOLDER_AYAAN: '1exh3fxgi0jmQvdGPJE2SgIOnYTIsEoM_',
   DRIVE_FOLDER_SOM: '1y5o31cU-IqNR__HDw2Ly8dXngr08E1jJ',
-  DRIVE_FOLDER_BOTH: '1S_BU-C1BDGh3RRBWBeK7bIqzxObYudyM'
+  DRIVE_FOLDER_BOTH: '1S_BU-C1BDGh3RRBWBeK7bIqzxObYudyM',
+  APP_NAME: 'Family Archive Uploader'
 };
+
+const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+let tokenClient;
+let accessToken = null;
+let gapiInited = false;
+let gisInited = false;
+
+const els = {
+  authArea: document.getElementById('authArea'),
+  signinBtn: document.getElementById('signinBtn'),
+  uploadBtn: document.getElementById('uploadBtn'),
+  status: document.getElementById('status'),
+  child: document.getElementById('child'),
+  category: document.getElementById('category'),
+  title: document.getElementById('title'),
+  date: document.getElementById('date'),
+  notes: document.getElementById('notes'),
+  file: document.getElementById('file')
+};
+
+function setStatus(msg, type='info') {
+  els.status.className = `status show ${type}`;
+  els.status.textContent = msg;
+}
+
+function configOk(v){ return v && !String(v).includes('PASTE_'); }
+function updateConfigStatus(){
+  document.getElementById('clientStatus').textContent = configOk(CONFIG.GOOGLE_CLIENT_ID) ? 'Configured' : 'Not configured';
+  document.getElementById('apiStatus').textContent = configOk(CONFIG.GOOGLE_API_KEY) ? 'Configured' : 'Not configured';
+  document.getElementById('ayaanStatus').textContent = configOk(CONFIG.DRIVE_FOLDER_AYAAN) ? 'Configured' : 'Not configured';
+  document.getElementById('somStatus').textContent = configOk(CONFIG.DRIVE_FOLDER_SOM) ? 'Configured' : 'Not configured';
+  document.getElementById('bothStatus').textContent = configOk(CONFIG.DRIVE_FOLDER_BOTH) ? 'Configured' : 'Not configured';
+}
+
+function assertConfig(){
+  const missing = [];
+  if(!configOk(CONFIG.GOOGLE_API_KEY)) missing.push('GOOGLE_API_KEY');
+  if(!configOk(CONFIG.GOOGLE_CLIENT_ID)) missing.push('GOOGLE_CLIENT_ID');
+  if(!configOk(CONFIG.DRIVE_FOLDER_AYAAN)) missing.push('DRIVE_FOLDER_AYAAN');
+  if(!configOk(CONFIG.DRIVE_FOLDER_SOM)) missing.push('DRIVE_FOLDER_SOM');
+  if(!configOk(CONFIG.DRIVE_FOLDER_BOTH)) missing.push('DRIVE_FOLDER_BOTH');
+  if(missing.length){
+    throw new Error('Missing config values: ' + missing.join(', '));
+  }
+}
+
+function getFolderId(){
+  const child = els.child.value;
+  if(child === 'Ayaan') return CONFIG.DRIVE_FOLDER_AYAAN;
+  if(child === 'Som') return CONFIG.DRIVE_FOLDER_SOM;
+  return CONFIG.DRIVE_FOLDER_BOTH;
+}
+
+function sanitizeName(s){
+  return String(s || '').trim().replace(/\s+/g,'-').replace(/[^a-zA-Z0-9\-_]/g,'');
+}
+
+function buildFilename(file){
+  const d = els.date.value || new Date().toISOString().slice(0,10);
+  const category = sanitizeName(els.category.value || 'Other');
+  const title = sanitizeName(els.title.value || 'Untitled');
+  const ext = (file.name.includes('.') ? '.' + file.name.split('.').pop() : '');
+  return `${d}_${category}_${title}${ext}`;
+}
+
+async function initializeGapi(){
+  await new Promise((resolve,reject)=>gapi.load('client', {callback:resolve, onerror:reject}));
+  await gapi.client.init({apiKey: CONFIG.GOOGLE_API_KEY});
+  gapiInited = true;
+}
+
+function initializeGis(){
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CONFIG.GOOGLE_CLIENT_ID,
+    scope: SCOPES,
+    callback: async (resp) => {
+      if (resp.error) {
+        setStatus('Google sign-in error: ' + resp.error, 'error');
+        return;
+      }
+      accessToken = resp.access_token;
+      els.authArea.textContent = 'Signed in to Google';
+      setStatus('Google sign-in successful. You can upload now.', 'success');
+    }
+  });
+  gisInited = true;
+}
+
+async function init(){
+  updateConfigStatus();
+  try {
+    assertConfig();
+  } catch(e) {
+    setStatus(e.message + '. Edit the CONFIG block in index.html, commit it to GitHub, and refresh the site.', 'error');
+    return;
+  }
+
+  try {
+    await initializeGapi();
+    initializeGis();
+    setStatus('App loaded. Sign in with Google to continue.', 'info');
+  } catch(e) {
+    setStatus('Initialization failed: ' + (e.message || e), 'error');
+  }
+}
+
+function signIn(){
+  try {
+    assertConfig();
+    if(!gisInited) throw new Error('Google Identity Services not ready yet');
+    tokenClient.requestAccessToken({prompt: accessToken ? '' : 'consent'});
+  } catch(e) {
+    setStatus(e.message, 'error');
+  }
+}
+
+async function uploadFile(){
+  try {
+    assertConfig();
+    if(!accessToken) throw new Error('Please sign in with Google first');
+    const file = els.file.files[0];
+    if(!file) throw new Error('Please choose a file');
+    if(!els.title.value.trim()) throw new Error('Please enter a title');
+
+    setStatus('Preparing upload…', 'info');
+
+    const metadata = {
+      name: buildFilename(file),
+      parents: [getFolderId()],
+      description: JSON.stringify({
+        child: els.child.value,
+        category: els.category.value,
+        title: els.title.value.trim(),
+        date: els.date.value || null,
+        notes: els.notes.value.trim() || null,
+        uploadedFrom: location.origin,
+        app: CONFIG.APP_NAME
+      })
+    };
+
+    const form = new FormData();
+    form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
+    form.append('file', file);
+
+    setStatus('Uploading to Google Drive…', 'info');
+
+    const resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: form
+    });
+
+    const data = await resp.json();
+    if(!resp.ok) {
+      throw new Error(data.error?.message || 'Upload failed');
+    }
+
+    setStatus(`Upload complete: ${data.name}`, 'success');
+    if(data.webViewLink){
+      const a = document.createElement('a');
+      a.href = data.webViewLink;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = 'Open file in Drive';
+      a.style.display = 'inline-block';
+      a.style.marginTop = '10px';
+      a.style.color = '#0c4e54';
+      els.status.appendChild(document.createElement('br'));
+      els.status.appendChild(a);
+    }
+  } catch(e) {
+    setStatus(e.message || String(e), 'error');
+  }
+}
+
+els.signinBtn.addEventListener('click', signIn);
+els.uploadBtn.addEventListener('click', uploadFile);
+window.addEventListener('load', init);
 </script>
 </body>
 </html>
